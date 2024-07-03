@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class AppTextField extends StatelessWidget {
-   AppTextField({
+   const AppTextField({
     this.obscureText = false,
     this.controller,
     super.key, this.hintText, this.onPressed, this.suffixIcon,this.keyboardType,});
   final TextEditingController? controller;
-   bool obscureText = false;
+  final bool obscureText;
   final String? hintText;
   final VoidCallback? onPressed;
   final Widget?  suffixIcon;
