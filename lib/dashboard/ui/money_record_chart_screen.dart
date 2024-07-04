@@ -27,7 +27,7 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
 
   Future<void> fetchMoneyRecord(BuildContext context) async {
     final moneyProvider =
-    Provider.of<MoneyRecordProvider>(context, listen: false);
+        Provider.of<MoneyRecordProvider>(context, listen: false);
     recordList = moneyProvider.moneyRecordsList;
     setState(() {});
   }
@@ -35,23 +35,6 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(moneyRecordChart),
-        actions: [
-          IconButton(
-            onPressed: () {
-              _openFilterScreen(context);
-            },
-            icon: const Icon(Icons.filter_list),
-          ),
-          Visibility(visible: selectedType != MoneyRecordType.all,
-            child: IconButton(
-              icon: const Icon(Icons.clear),
-              onPressed: clearFilter,
-            ),
-          ),
-        ],
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
@@ -59,6 +42,9 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
             children: [
               Card(
                 elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: SizedBox(
@@ -70,7 +56,7 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
                         sections: getExpenseSections(),
                         borderData: FlBorderData(show: true),
                         centerSpaceRadius: 40,
-                        sectionsSpace: 0,
+                        sectionsSpace: 2,
                       ),
                     ),
                   ),
@@ -81,14 +67,23 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 children: calculateFilteredRecords().map((record) {
-                  return ListTile(
-                    leading: Container(
-                      width: 20,
-                      height: 20,
-                      color: getRandomColor(record.category),
+                  return Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    title: Text(record.category),
-                    subtitle: Text('Amount: ${record.amount}'),
+                    child: ListTile(
+                      leading: Container(
+                        width: 20,
+                        height: 20,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: getRandomColor(record.category),
+                        ),
+                      ),
+                      title: Text(record.category),
+                      subtitle: Text('Amount: ${record.amount}'),
+                    ),
                   );
                 }).toList(),
               ),
@@ -101,7 +96,7 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
 
   List<PieChartSectionData> getExpenseSections() {
     Map<String, double> expensesByCategory =
-    getExpensesByCategory(recordList, selectedType, selectedCategory);
+        getExpensesByCategory(recordList, selectedType, selectedCategory);
     List<PieChartSectionData> sections = [];
 
     expensesByCategory.forEach((category, amount) {
@@ -120,6 +115,7 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
 
     return sections;
   }
+
   List<MoneyRecordModel> calculateFilteredRecords() {
     if (selectedType == MoneyRecordType.all && selectedCategory.isEmpty) {
       return recordList;
@@ -128,66 +124,42 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
     Map<String, double> categoryRecord = {};
 
     for (MoneyRecordModel record in recordList) {
-      if (record.type == selectedType &&
+      if ((record.type == selectedType ||
+              selectedType == MoneyRecordType.all) &&
           (selectedCategory.isEmpty || record.category == selectedCategory)) {
-        if (categoryRecord.containsKey(record.category)) {
-          categoryRecord[record.category] =
-              (categoryRecord[record.category] ?? 0) + record.amount;
-        } else {
-          categoryRecord[record.category] = record.amount;
-        }
+        categoryRecord.update(record.category, (value) => value + record.amount,
+            ifAbsent: () => record.amount);
       }
     }
 
-    List<MoneyRecordModel> filteredRecords = categoryRecord.entries.map((record) {
+    return categoryRecord.entries.map((entry) {
       return MoneyRecordModel(
         type: selectedType,
-        category: record.key,
-        amount: record.value,
-        date: DateTime.now().microsecondsSinceEpoch,
+        category: entry.key,
+        amount: entry.value,
+        date: DateTime.now().millisecondsSinceEpoch,
         title: '',
       );
     }).toList();
-
-    return filteredRecords;
   }
 
   Color getRandomColor(String category) {
-    if (category == AppConst.getRecordCategories()[0]) {
-      return Colors.red;
-    }
-    if (category == AppConst.getRecordCategories()[1]) {
-      return Colors.blue;
-    }
-    if (category == AppConst.getRecordCategories()[2]) {
-      return Colors.green;
-    }
-    if (category == AppConst.getRecordCategories()[3]) {
-      return Colors.yellow;
-    }
-    if (category == AppConst.getRecordCategories()[4]) {
-      return Colors.orange;
-    }
-    if (category == AppConst.getRecordCategories()[5]) {
-      return Colors.purple;
-    }
-    if (category == AppConst.getRecordCategories()[6]) {
-      return Colors.black;
-    }
-    if (category == AppConst.getRecordCategories()[7]) {
-      return Colors.grey;
-    }
-    if (category == AppConst.getRecordCategories()[8]) {
-      return Colors.blueAccent;
-    }
-    if (category == AppConst.getRecordCategories()[9]) {
-      return Colors.brown;
-    }
-    if (category == AppConst.getRecordCategories()[10]) {
-      return Colors.deepOrangeAccent;
-    }
-
-    return Colors.amberAccent;
+    List<Color> colors = [
+      Colors.red,
+      Colors.blue,
+      Colors.green,
+      Colors.yellow,
+      Colors.orange,
+      Colors.purple,
+      Colors.black,
+      Colors.grey,
+      Colors.blueAccent,
+      Colors.brown,
+      Colors.deepOrangeAccent,
+      Colors.amberAccent,
+    ];
+    int index = AppConst.getRecordCategories().indexOf(category);
+    return colors[index % colors.length];
   }
 
   void _openFilterScreen(BuildContext context) async {
@@ -220,19 +192,14 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
     for (MoneyRecordModel record in records) {
       if ((type == MoneyRecordType.all || record.type == type) &&
           (category.isEmpty || record.category == category)) {
-        String recordCategory = record.category;
         expensesByCategory.update(
-          recordCategory,
-              (value) => value + record.amount,
-          ifAbsent: () => record.amount,
-        );
+            record.category, (value) => value + record.amount,
+            ifAbsent: () => record.amount);
       }
     }
 
     return expensesByCategory;
   }
-
-
 
   void clearFilter() {
     setState(() {

@@ -1,3 +1,4 @@
+import 'package:cash_counter/dashboard/provider/money_record_provider.dart';
 import 'package:cash_counter/login/provider/auth_provider.dart';
 import 'package:cash_counter/login/service/database_service.dart';
 import 'package:cash_counter/login/ui/login_screen.dart';
@@ -24,7 +25,10 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) {
           return AuthProvider(databaseService);
-        },)
+        },),
+        ChangeNotifierProvider(create: (context) {
+          return MoneyRecordProvider(databaseService);
+        }),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

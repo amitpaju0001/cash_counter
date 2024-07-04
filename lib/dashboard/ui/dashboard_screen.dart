@@ -1,5 +1,6 @@
 import 'package:cash_counter/dashboard/ui/add_money_record_screen.dart';
 import 'package:cash_counter/dashboard/ui/money_record_chart_screen.dart';
+import 'package:cash_counter/dashboard/ui/money_record_list_screen.dart';
 import 'package:cash_counter/shared/app_string.dart';
 import 'package:flutter/material.dart';
 
@@ -14,14 +15,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _tabScreenList = [
+    const MoneyRecordListScreen(),
     const MoneyRecordChartScreen(),
-    const AddMoneyRecordScreen(),
   ];
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
+          shape: CircleBorder(),
           onPressed: openAddTransactionScreen,
           child: const Icon(Icons.add),
         ),
