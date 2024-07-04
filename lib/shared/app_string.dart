@@ -33,3 +33,4 @@ const String  deleteAlert= " Delete Alert";
 const String  cancelAlert= "Cancel";
 const String  okayAlert= "Okay";
 const String  deleteAlertText= " Are you sure want to delete this?";
+const String  moneyRecordChart= "Money Record Chart";

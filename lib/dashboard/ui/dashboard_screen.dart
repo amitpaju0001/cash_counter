@@ -1,4 +1,5 @@
 import 'package:cash_counter/dashboard/ui/add_money_record_screen.dart';
+import 'package:cash_counter/dashboard/ui/money_record_chart_screen.dart';
 import 'package:cash_counter/shared/app_string.dart';
 import 'package:flutter/material.dart';
 
@@ -13,8 +14,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _tabScreenList = [
-    Container(),
-    AddMoneyRecordScreen(),
+    const MoneyRecordChartScreen(),
+    const AddMoneyRecordScreen(),
   ];
   @override
   Widget build(BuildContext context) {
