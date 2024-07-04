@@ -1,7 +1,6 @@
 import 'package:cash_counter/login/model/user_model.dart';
 import 'package:cash_counter/login/provider/auth_provider.dart';
 import 'package:cash_counter/login/ui/login_screen.dart';
-import 'package:cash_counter/shared/app_colors.dart';
 import 'package:cash_counter/shared/app_string.dart';
 import 'package:cash_counter/shared/app_text_field.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +23,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -40,50 +42,61 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         const Text(
                           register,
                           style: TextStyle(
-                            fontSize: 28,
+                            fontSize: 32,
                             fontWeight: FontWeight.bold,
+                            color: Colors.blueAccent,
                           ),
                         ),
                         const SizedBox(height: 8),
-                        const Text(
-                          'Enter Your Personal Information',
+                        Text(
+                          registerSubtitle,
                           style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey[700],
                           ),
                         ),
-                        const SizedBox(height: 16),
-                        const Text(
+                        const SizedBox(height: 32),
+                        Text(
                           userName,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.grey[700],
                           ),
                         ),
                         const SizedBox(height: 8),
                         AppTextField(
                           controller: userNameController,
                           hintText: nameFieldHint,
+                          fillColor: Colors.grey[100],
+                          filled: true,
+                          borderRadius: 12,
                         ),
                         const SizedBox(height: 16),
-                        const Text(
+                        Text(
                           email,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            color: Colors.grey[700],
                           ),
                         ),
                         const SizedBox(height: 8),
                         AppTextField(
                           controller: emailController,
                           hintText: emailFieldHint,
+                          fillColor: Colors.grey[100],
+                          filled: true,
+                          borderRadius: 12,
                         ),
                         const SizedBox(height: 16),
-                        const Text(
+                        Text(
                           password,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
+                            color: Colors.grey[700],
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -91,6 +104,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           controller: passwordController,
                           obscureText: !authProvider.isVisible,
                           hintText: passwordFieldHint,
+                          fillColor: Colors.grey[100],
+                          filled: true,
+                          borderRadius: 12,
                           suffixIcon: IconButton(
                             icon: Icon(authProvider.isVisible
                                 ? Icons.visibility
@@ -101,18 +117,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
+                        Text(
                           confirmPassword,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
+                            color: Colors.grey[700],
                           ),
                         ),
                         const SizedBox(height: 8),
                         AppTextField(
                           controller: confirmPasswordController,
                           obscureText: !authProvider.isVisible,
-                          hintText: 'Enter Confirm Password',
+                          hintText: confirmPassword,
+                          fillColor: Colors.grey[100],
+                          filled: true,
+                          borderRadius: 12,
                           suffixIcon: IconButton(
                             icon: Icon(authProvider.isVisible
                                 ? Icons.visibility
@@ -132,37 +152,53 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              color: Colors.blue,
+                              gradient: const LinearGradient(
+                                colors: [Colors.blueAccent, Colors.lightBlueAccent],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
                               borderRadius: BorderRadius.circular(24),
                             ),
                             child: const Text(
                               register,
                               style: TextStyle(
                                 color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
                               ),
                             ),
                           ),
                         ),
+                        const SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text(alreadyAccount),
-                            const SizedBox(
-                              width: 4,
-                            ),
+                            const SizedBox(width: 4),
                             TextButton(
-                                onPressed: () {
-                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen(),));
-                                },
-                                child: const Text(
-                                  login,
-                                  style: TextStyle(color: textButtonColor),
-                                ))
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const LoginScreen(),
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                login,
+                                style: TextStyle(
+                                  color: Colors.blueAccent,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ],
-                        )
+                        ),
                       ],
                     ),
-                    authProvider.isLoading?const CircularProgressIndicator():const SizedBox(),
+                    authProvider.isLoading
+                        ? const CircularProgressIndicator()
+                        : const SizedBox(),
                   ],
                 );
               },
@@ -178,7 +214,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       email: emailController.text,
       password: passwordController.text,
       name: userNameController.text,
-
     );
     AuthProvider provider = Provider.of<AuthProvider>(context, listen: false);
     await provider.registerUser(user);
@@ -188,8 +223,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void loginUserScreen() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return const LoginScreen();
-    }));
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return const LoginScreen();
+        },
+      ),
+    );
   }
 }

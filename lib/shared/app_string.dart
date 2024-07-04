@@ -4,6 +4,7 @@ const String loginText = "Login app to Continue";
 const String email = "Email";
 const String emailFieldHint = "Enter you email";
 const String password = "Password";
+const String registerSubtitle = 'Enter Your Personal Information';
 const String confirmPassword = " Confirm Password";
 const String reconfirmPassword = " Re-enter your password";
 const String passwordFieldHint = "Enter password";
