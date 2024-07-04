@@ -29,3 +29,7 @@ const String labelTextName = 'Name';
 const String editMoneyTitleText = 'Edit Money Record ';
 const String editRecordTitleText = 'Edit Record ';
 const String recordEditMsg = "Record Update Successfully";
+const String  deleteAlert= " Delete Alert";
+const String  cancelAlert= "Cancel";
+const String  okayAlert= "Okay";
+const String  deleteAlertText= " Are you sure want to delete this?";
