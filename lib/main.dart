@@ -5,11 +5,13 @@ import 'package:cash_counter/shared/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-Future main()async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-DatabaseService databaseService = DatabaseService();
-await databaseService.initDatabase();
-  runApp( MyApp(databaseService: databaseService));
+
+  DatabaseService databaseService = DatabaseService();
+  await databaseService.initDatabase();
+
+  runApp(MyApp(databaseService: databaseService));
 }
 
 class MyApp extends StatelessWidget {
