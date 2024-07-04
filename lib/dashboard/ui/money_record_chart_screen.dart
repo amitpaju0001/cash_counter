@@ -2,7 +2,6 @@ import 'package:cash_counter/dashboard/model/money_record_model.dart';
 import 'package:cash_counter/dashboard/provider/money_record_provider.dart';
 import 'package:cash_counter/dashboard/ui/money_record_filter_screen.dart';
 import 'package:cash_counter/shared/app_const.dart';
-import 'package:cash_counter/shared/app_string.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -162,7 +161,7 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
     return colors[index % colors.length];
   }
 
-  void _openFilterScreen(BuildContext context) async {
+  void openFilterScreen(BuildContext context) async {
     await showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
