@@ -1,4 +1,3 @@
-import 'package:cash_counter/dashboard/model/money_record_model.dart';
 import 'package:cash_counter/dashboard/ui/add_money_record_screen.dart';
 import 'package:cash_counter/shared/app_string.dart';
 import 'package:flutter/material.dart';
