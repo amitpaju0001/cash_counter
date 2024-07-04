@@ -24,3 +24,5 @@ const String expenseText = 'Expense';
 const String incomeText = 'Income';
 const String recordAddMsg = "Record added Successfully";
 const String addRecordTitleText = 'Add Record ';
+const String labelTextAmount = 'Amount';
+const String labelTextName = 'Name';

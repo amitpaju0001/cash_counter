@@ -17,8 +17,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
      Container(),
      Container(),
   ];
-
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
