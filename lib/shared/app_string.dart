@@ -26,3 +26,6 @@ const String recordAddMsg = "Record added Successfully";
 const String addRecordTitleText = 'Add Record ';
 const String labelTextAmount = 'Amount';
 const String labelTextName = 'Name';
+const String editMoneyTitleText = 'Edit Money Record ';
+const String editRecordTitleText = 'Edit Record ';
+const String recordEditMsg = "Record Update Successfully";
