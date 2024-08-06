@@ -48,7 +48,6 @@ class CustomAuthProvider extends ChangeNotifier {
       Fluttertoast.showToast(msg: e.toString());
     }
   }
-
   Future<void> login(UserModel userModel) async {
     try {
       isError = false;
@@ -153,29 +152,17 @@ class CustomAuthProvider extends ChangeNotifier {
       isError = false;
       notifyListeners();
 
-      FirebaseAuth _auth = FirebaseAuth.instance;
-
-      await _auth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        timeout: const Duration(seconds: 60),
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          // Handle auto sign-in on Android
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          isLoading = false;
-          isError = true;
-          notifyListeners();
-          Fluttertoast.showToast(msg: 'Phone Auth Error: ${e.message}');
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          _verificationId = verificationId;
-          isLoading = false;
-          notifyListeners();
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          _verificationId = verificationId;
-        },
-      );
+      AuthService authService = Get.find();
+      await authService.verifyPhoneNumber(phoneNumber, (verificationId) {
+        _verificationId = verificationId;
+        isLoading = false;
+        notifyListeners();
+      }, (error) {
+        isLoading = false;
+        isError = true;
+        notifyListeners();
+        Fluttertoast.showToast(msg: 'Phone Auth Error: ${error.message}');
+      });
     } catch (e) {
       isLoading = false;
       isError = true;
@@ -190,13 +177,8 @@ class CustomAuthProvider extends ChangeNotifier {
       isError = false;
       notifyListeners();
 
-      FirebaseAuth _auth = FirebaseAuth.instance;
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: verificationId,
-        smsCode: otp,
-      );
-
-      await _auth.signInWithCredential(credential);
+      AuthService authService = Get.find();
+      await authService.signInWithOtp(verificationId, otp);
 
       isLoading = false;
       notifyListeners();
