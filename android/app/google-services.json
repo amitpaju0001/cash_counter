@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "218926581986",
+    "project_id": "cash-counter-2bc12",
+    "storage_bucket": "cash-counter-2bc12.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218926581986:android:b67424211947dd704336bb",
+        "android_client_info": {
+          "package_name": "com.example.cash_counter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "218926581986-5ikq589geshbu9mlrf8ussje7v27ko8v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS6Qglaeog0oYM8GSi4XbLRQUu5XDSHyo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "218926581986-5ikq589geshbu9mlrf8ussje7v27ko8v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

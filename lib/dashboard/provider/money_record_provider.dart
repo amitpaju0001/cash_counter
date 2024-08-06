@@ -1,5 +1,5 @@
+import 'package:cash_counter/dashboard/service/database_service.dart';
 import 'package:cash_counter/dashboard/model/money_record_model.dart';
-import 'package:cash_counter/login/service/database_service.dart';
 import 'package:cash_counter/shared/app_util.dart';
 import 'package:flutter/cupertino.dart';
 class MoneyRecordProvider extends ChangeNotifier {

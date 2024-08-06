@@ -1,9 +1,10 @@
-import 'package:cash_counter/login/model/user_model.dart';
-import 'package:cash_counter/login/provider/auth_provider.dart';
-import 'package:cash_counter/login/ui/login_screen.dart';
+import 'package:cash_counter/auth/provider/custom_auth_provider.dart';
+import 'package:cash_counter/auth/ui/login_screen.dart';
+import 'package:cash_counter/auth/ui/otp_screen.dart';
 import 'package:cash_counter/shared/app_string.dart';
 import 'package:cash_counter/shared/app_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -18,6 +19,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +27,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Consumer<AuthProvider>(
+            child: Consumer<CustomAuthProvider>(
               builder: (context, authProvider, child) {
                 return Stack(
                   alignment: Alignment.center,
@@ -49,7 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          registerSubtitle,
+                          createAccount,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
@@ -92,6 +94,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
+                          phone,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        AppTextField(
+                          controller: phoneController,
+                          hintText: phoneNumberFieldHint,
+                          fillColor: Colors.grey[100],
+                          filled: true,
+                          borderRadius: 12,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
                           password,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -102,17 +121,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         const SizedBox(height: 8),
                         AppTextField(
                           controller: passwordController,
-                          obscureText: !authProvider.isVisible,
+                          obscureText: !authProvider.isPasswordVisible,
                           hintText: passwordFieldHint,
                           fillColor: Colors.grey[100],
                           filled: true,
                           borderRadius: 12,
                           suffixIcon: IconButton(
-                            icon: Icon(authProvider.isVisible
+                            icon: Icon(authProvider.isPasswordVisible
                                 ? Icons.visibility
                                 : Icons.visibility_off),
                             onPressed: () {
-                              authProvider.setPasswordFieldStatus();
+                              authProvider.togglePasswordVisibility();
                             },
                           ),
                         ),
@@ -128,24 +147,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         const SizedBox(height: 8),
                         AppTextField(
                           controller: confirmPasswordController,
-                          obscureText: !authProvider.isVisible,
+                          obscureText: !authProvider.isPasswordVisible,
                           hintText: confirmPassword,
                           fillColor: Colors.grey[100],
                           filled: true,
                           borderRadius: 12,
                           suffixIcon: IconButton(
-                            icon: Icon(authProvider.isVisible
+                            icon: Icon(authProvider.isPasswordVisible
                                 ? Icons.visibility
                                 : Icons.visibility_off),
                             onPressed: () {
-                              authProvider.setPasswordFieldStatus();
+                              authProvider.togglePasswordVisibility();
                             },
                           ),
                         ),
                         const SizedBox(height: 24),
                         InkWell(
-                          onTap: () {
-                            openRegisterUser();
+                          onTap: () async {
+                            if (passwordController.text !=
+                                confirmPasswordController.text) {
+                              Fluttertoast.showToast(
+                                  msg: 'Passwords do not match');
+                            } else {
+                              print('Verifying phone number...');
+                              await authProvider.verifyPhoneNumber(
+                                  phoneController.text.toString());
+                              print('Verification ID: ${authProvider.verificationId}');
+                              if (authProvider.verificationId != null) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OtpScreen(
+                                      verificationId:
+                                      authProvider.verificationId!,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: 'Failed to verify phone number');
+                              }
+                            }
                           },
                           child: Container(
                             alignment: Alignment.center,
@@ -153,7 +195,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             width: double.infinity,
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [Colors.blueAccent, Colors.lightBlueAccent],
+                                colors: [
+                                  Colors.blueAccent,
+                                  Colors.lightBlueAccent
+                                ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
@@ -205,30 +250,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Future openRegisterUser() async {
-    UserModel user = UserModel(
-      email: emailController.text,
-      password: passwordController.text,
-      name: userNameController.text,
-    );
-    AuthProvider provider = Provider.of<AuthProvider>(context, listen: false);
-    await provider.registerUser(user);
-    if (mounted && provider.error == null) {
-      Navigator.pop(context);
-    }
-  }
-
-  void loginUserScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) {
-          return const LoginScreen();
-        },
       ),
     );
   }

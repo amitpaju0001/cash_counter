@@ -1,12 +1,10 @@
 import 'package:cash_counter/dashboard/model/money_record_model.dart';
-import 'package:cash_counter/login/model/user_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseService {
   late Database database;
-  String userTableName = 'user';
   String moneyRecordTableName = 'money_record';
 
   Future<void> initDatabase() async {
@@ -16,7 +14,6 @@ class DatabaseService {
       path,
       version: 1,
       onCreate: (db, version) async {
-        createUserTable(db);
         createMoneyRecordTable(db);
         if (kDebugMode) {
           print("Tables created successfully");
@@ -30,27 +27,6 @@ class DatabaseService {
         "create table $moneyRecordTableName(id integer primary key autoincrement, "
             "title text, amount real, category text "
             ",date integer,type text )");
-  }
-
-  Future<void> createUserTable(Database db) async {
-    await db.execute(
-        'CREATE TABLE $userTableName (email TEXT PRIMARY KEY, name TEXT, password TEXT)');
-  }
-
-  Future<void> registerUser(UserModel user) async {
-    await database.rawInsert(
-        'INSERT INTO $userTableName (email, name, password) VALUES (?, ?, ?)',
-        [user.email, user.name, user.password]);
-    if (kDebugMode) {
-      print('User added successfully');
-    }
-  }
-
-  Future<bool> isUserExists(UserModel user) async {
-    List<Map<String, dynamic>> list = await database.rawQuery(
-        "SELECT * FROM $userTableName WHERE email = ? AND password = ?",
-        [user.email, user.password]);
-    return list.isNotEmpty;
   }
 
   Future<void> addMoneyRecord(MoneyRecordModel moneyRecord) async {
